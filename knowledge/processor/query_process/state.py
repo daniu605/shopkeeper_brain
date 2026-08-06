@@ -26,6 +26,7 @@ class QueryGraphState(TypedDict):
     prompt: str                   # 提示词
     answer: str                   # 答案
     item_names: List[str]         # 商品名称
+    item_name_options: List[str]  # 商品候选列表（模糊匹配时供用户选择，最多 config.item_name_max_options 个）
     rewritten_query: str          # 重写查询
     history: list                 # 历史对话
     is_stream: bool               # 是否流式输出
@@ -46,6 +47,7 @@ DEFAULT_STATE: QueryGraphState = {
     "prompt": "",
     "answer": "",
     "item_names": [],
+    "item_name_options": [],
     "rewritten_query": "",
     "history": [],
     "is_stream": False,

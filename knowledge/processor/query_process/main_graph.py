@@ -22,7 +22,7 @@ from knowledge.processor.query_process.nodes.vector_search import VectorSearchNo
 from knowledge.processor.query_process.nodes.hyde_search import HyDeSearchNode
 from knowledge.processor.query_process.nodes.rrf import RrfNode
 from knowledge.processor.query_process.nodes.rerank import RerankNode
-from knowledge.processor.query_process.nodes.web_search_mcp import WebSearchMcpNode
+from knowledge.processor.query_process.nodes.web_search_mcp import McpSearchNode
 # 加载环境变量
 load_dotenv()
 
@@ -94,7 +94,7 @@ def create_query_graph() -> CompiledStateGraph:
         "multi_search": lambda x: x,   # 虚拟节点（分发）
         "search_embedding": VectorSearchNode(),
         "search_embedding_hyde": HyDeSearchNode(),
-        "web_search_mcp": WebSearchMcpNode(),
+        "web_search_mcp": McpSearchNode(),
         "join": lambda x: {},  # 虚拟节点（汇合）
         "rrf": RrfNode(),
         "rerank": RerankNode(),
@@ -147,6 +147,7 @@ if __name__ == "__main__":
 
     setup_logging()
 
+
     print("=" * 60)
     print("开始测试: 查询流程主图 (main_graph)")
     print("=" * 60)
@@ -159,21 +160,36 @@ if __name__ == "__main__":
         "original_query": "RS-12 数字万用表如何测量直流电压？",
         "session_id": "test_session_main_graph",
         "task_id": "test_task_001",
-        "is_stream": False,
+        "is_stream": True,
     }
 
     print(f"  查询: {mock_state_1['original_query']}")
     print(f"  session_id: {mock_state_1['session_id']}")
 
-    result_1 = query_app.invoke(mock_state_1) #只能看到最后结果
-    #result_1 = query_app.stream(mock_state_1) #可以查看到每一个节点的输出
+
+    result_1 = query_app.stream(mock_state_1) #可以查看到每一个节点的输出
     #与LLM中的llm.invoke()和 llm.stream()的作用不同。llm.stream()表示流式输出。
 
+    # print(f"\n  【结果】:")
+    # print(f"  商品名: {result_1.get('item_names')}")
+    # print(f"  重写查询: {result_1.get('rewritten_query')}")
+    # answer_1 = result_1.get("answer", "")
+    # print(answer_1)
+
+
+    # 遍历生成器，收集每个节点的输出，合并为最终状态
+    final_state = {}
+    for chunk in result_1:
+        # stream() 每次产出 {node_name: node_output} 格式的字典
+        for node_output in chunk.values():
+            if isinstance(node_output, dict):
+                final_state.update(node_output)
+
     print(f"\n  【结果】:")
-    print(f"  商品名: {result_1.get('item_names')}")
-    print(f"  重写查询: {result_1.get('rewritten_query')}")
-    answer_1 = result_1.get("answer", "")
-    print(f"  答案: {answer_1[:200]}..." if len(answer_1) > 200 else f"  答案: {answer_1}")
+    print(f"  商品名: {final_state.get('item_names')}")
+    print(f"  重写查询: {final_state.get('rewritten_query')}")
+    answer_1 = final_state.get("answer", "")
+    print(answer_1)
 
 """
     invoke vs stream 的区别：

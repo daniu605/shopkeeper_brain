@@ -24,17 +24,19 @@ _NODE_NAME_TO_CN: Dict[str, str] = {
     "upload_file": "上传文件",
     "entry_node": "检查文件",
     "pdf_to_md_node": "PDF转Markdown",
-    "md_to_img_node": "Markdown图片处理",
+    "md_img_node": "Markdown图片处理",
     "document_split_node": "文档切分",
-    "item_name_recognition_node": "主体名称识别",
-    "embedding_chunk_node": "向量生成",
+    "item_name_rec_node": "主体名称识别",
+    "bge_embedding_node": "向量生成",
     "import_milvus_node": "导入向量数据库",
     "__end__": "处理完成",
     # --- Query 流程节点（kb/query_process/main_graph.py）---
+    "query_submit": "提交查询",
     "item_name_confirm_node": "确认问题产品",
     "answer_output_node": "生成答案",
     "rerank_node": "重排序",
     "rrf_node": "倒排融合",
+    "mcp_search_node": "网络搜索",
     "web_search_mcp_node": "网络搜索",
     "vector_search_node": "切片搜索",
     "hyde_search_node": "切片搜索(假设性文档)"
@@ -105,6 +107,13 @@ def get_task_result(task_id: str, key: str, default: str = "") -> str:
     获取任务结果字段（如 answer / error）。
     """
     return _tasks_result.get(task_id, {}).get(key, default)
+
+
+def get_task_results(task_id: str) -> Dict[str, str]:
+    """
+    获取任务的全部结果字段（如 item_name / error）
+    """
+    return dict(_tasks_result.get(task_id, {}))
 
 
 

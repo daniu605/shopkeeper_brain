@@ -24,10 +24,10 @@ class QueryConfig:
 
     # ==================== Rerank 配置 ====================
     rerank_max_top_k: int = field(
-        default_factory=lambda: int(os.getenv("RERANK_MAX_TOP_K", "10"))
+        default_factory=lambda: int(os.getenv("RERANK_MAX_TOP_K", "5"))
     )
     rerank_min_top_k: int = field(
-        default_factory=lambda: int(os.getenv("RERANK_MIN_TOP_K", "3"))
+        default_factory=lambda: int(os.getenv("RERANK_MIN_TOP_K", "2"))
     )
     rerank_gap_abs: float = field(
         default_factory=lambda: float(os.getenv("RERANK_GAP_ABS", "0.15"))
@@ -38,7 +38,7 @@ class QueryConfig:
         default_factory=lambda: int(os.getenv("RRF_K", "60"))
     )
     rrf_max_results: int = field(
-        default_factory=lambda: int(os.getenv("RRF_MAX_RESULTS", "10"))
+        default_factory=lambda: int(os.getenv("RRF_MAX_RESULTS", "5"))
     )
 
     # ==================== 检索配置 ====================
@@ -65,6 +65,9 @@ class QueryConfig:
     item_name_sparse_weight: float = field(
         default_factory=lambda: float(os.getenv("ITEM_NAME_SPARSE_WEIGHT", "0.5"))
     )
+    item_name_score_gap: float = field(
+        default_factory=lambda: float(os.getenv("ITEM_NAME_SCORE_GAP", "0.15"))
+    )  # 多商品确认时，与最高分差距超过该值的结果被剔除
 
     # ==================== LLM 配置 ====================
     openai_api_base: str = field(
@@ -97,6 +100,9 @@ class QueryConfig:
     # ====================MCP 配置 ====================
     mcp_dashscope_base_url: str = field(
         default_factory=lambda: os.getenv("MCP_DASHSCOPE_BASE_URL", "")
+    )
+    mcp_search_limit: int = field(
+        default_factory=lambda: int(os.getenv("MCP_SEARCH_LIMIT", "5"))
     )
 
 

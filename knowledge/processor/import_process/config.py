@@ -25,9 +25,9 @@ class ImportConfig:
     """导入流程配置"""
 
     # ==================== 文档处理配置 ====================
-    max_content_length: int = 1000  # 切片最大长度
+    max_content_length: int = 500  # 切片最大长度
     img_content_length: int = 200  # 图片上下文最大长度
-    min_content_length: int = 500  # 合并短内容的最小长度
+    min_content_length: int = 100  # 合并短内容的最小长度
     overlap_sentences: int = 1  # 句子级切分时的重叠句数
     item_name_chunk_k: int = 3  # 商品名识别时使用的切片数量
     item_name_chunk_size: int = 2500  # 商品名识别时使用的切片内容长度
@@ -95,7 +95,12 @@ class ImportConfig:
     embedding_batch_size: int = 8
 
     # ==================== 速率限制 ====================
-    requests_per_minute: int = 10  # 图片总结 API 速率限制
+    requests_per_minute: int = 15  # 图片总结 API 速率限制
+
+    # ==================== API 配置 ====================
+    status_poll_interval: float = field(
+        default_factory=lambda: float(os.getenv("STATUS_POLL_INTERVAL", "1.5"))
+    )  # 前端轮询任务状态的时间间隔（秒）
 
     #创建实例对象
     @classmethod

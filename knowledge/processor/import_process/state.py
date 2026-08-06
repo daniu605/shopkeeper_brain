@@ -36,6 +36,8 @@ class ImportGraphState(TypedDict, total=False):
 
     is_pdf_read_enabled: bool  # 是否启用 PDF 读取   pdf需要转md
 
+    delete_flag: bool  # 是否删除并重建 chunks 集合（导入时控制，True=拆旧重建）
+
     # ==================== 路径信息 ====================
 
     #D:\workspace\python\PythonProject\shopkeeper_brain\knowledge\processor\import_process\temp_dir\万用表RS-12的使用.pdf
@@ -74,6 +76,8 @@ GRAPH_DEFAULT_STATE: ImportGraphState = {
     "is_pdf_read_enabled": False,
 
     "is_md_read_enabled": False,
+
+    "delete_flag": False,
 
     "file_dir": "",
 
