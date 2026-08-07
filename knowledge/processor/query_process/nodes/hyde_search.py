@@ -165,7 +165,7 @@ class HyDeSearchNode(BaseNode):
                 dense_vector=vector["dense"][0],
                 sparse_vector=vector["sparse"][0],
                 expr=filter_expr,
-                expr_params=filter_expr_params
+                expr_params=filter_expr_params,
             )
 
             # 3. 执行混合检索（内部已用 WeightedRanker 融合）
@@ -173,7 +173,8 @@ class HyDeSearchNode(BaseNode):
                 milvus_client=milvus_client,
                 collection_name=self.config.chunks_collection,
                 search_requests=search_requests,
-                output_fields=["chunk_id", "item_name", "content", "title"]
+                output_fields=["chunk_id", "item_name", "content", "title"],
+                limit = self.config.hyde_search_limit,
             )
 
             # 4. 单查询 → 取第一组命中；无命中返回空列表
